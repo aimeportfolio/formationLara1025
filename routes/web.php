@@ -18,10 +18,20 @@ Route::get('/', function () {
     return view('welcome');
 })->name('blog.index2');
 
-Route::prefix('blog')->name('monblog.')->group(function () {
+Route::prefix('blog')->name('blog.')->group(function () {
     Route::get('/', function (Request $request) {
+        // Creation de deux articles en base de données
+        $post = new \App\Models\Post();
+
+        $post->title = 'Mon second article';
+        $post->slug = 'mon-second-article';
+        $post->content = 'Mon second contenu de vraie.';
+
+        $post->save();
+        return $post;
+
         return [
-            "link" => \route('monblog.show', ['slug' => 'mon-article-spéciale', 'id' => 12]),
+            "link" => \route('blog.show', ['slug' => 'mon-article-spéciale', 'id' => 12]),
         ];
     })->name('index');
 
