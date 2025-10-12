@@ -19,10 +19,10 @@ Route::get('/', function () {
     return view('welcome');
 })->name('blog.index2');
 
-Route::prefix('blog')->name('blog.')->group(function () {
-    Route::get('/', [BlogController::class, "index"])->name('index');
+Route::prefix('blog')->name('blog.')->controller(BlogController::class)->group(function () {
+    Route::get('/', "index")->name('index');
 
-        Route::get('/{slug}-{id}', [BlogController::class, "show"]
+        Route::get('/{slug}-{id}', "show"
     )->where([
         'slug' => '[a-z0-9\-]+',
         'id' => '[0-9]+',
