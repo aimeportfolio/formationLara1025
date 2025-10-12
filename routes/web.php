@@ -20,28 +20,27 @@ Route::get('/', function () {
 
 Route::prefix('blog')->name('blog.')->group(function () {
     Route::get('/', function (Request $request) {
-        // Creation de deux articles en base de données
-        $post = new \App\Models\Post();
+        
+        // Récuperation de deux articles en base de données
+        //$post = (new \App\Models\Post())::find(2);
 
-        $post->title = 'Mon second article';
-        $post->slug = 'mon-second-article';
-        $post->content = 'Mon second contenu de vraie.';
+        //Pagination filtre
+        //$post = (new \App\Models\Post())::where('id', '>', 2)->limit(1)->get();
 
-        $post->save();
-        return $post;
+        //Modification et sauvegarde
+        //$post = (new \App\Models\Post())::find(2);
+        //$post->title = 'titre modifié';
+        //$post->save();
 
-        return [
-            "link" => \route('blog.show', ['slug' => 'mon-article-spéciale', 'id' => 12]),
-        ];
+        return \App\Models\Post::paginate(3);
     })->name('index');
 
-    Route::get('/{slug}-{id}', function (String $slug, String $id, Request $request) {
-        return [
-            "slug" => $slug,
-            "id" => $id,
-            //"prenom" => $request->all()["prenom"],
-            "prenom" => $request->input('prenom', 'Aimé TOSSOU'),
-        ];
+        Route::get('/{slug}-{id}', function (String $slug, String $id, Request $request) {
+        $post = \App\Models\Post::findOrFail($id);
+        if($request->slug !== $post->slug) {
+            return to_route('blog.show', [$post->slug, $request->id]);
+        }
+        return $post;
     })->where([
         'slug' => '[a-z0-9\-]+',
         'id' => '[0-9]+',
