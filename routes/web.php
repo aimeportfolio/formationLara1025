@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BlogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,29 +20,10 @@ Route::get('/', function () {
 })->name('blog.index2');
 
 Route::prefix('blog')->name('blog.')->group(function () {
-    Route::get('/', function (Request $request) {
-        
-        // Récuperation de deux articles en base de données
-        //$post = (new \App\Models\Post())::find(2);
+    Route::get('/', [BlogController::class, "index"])->name('index');
 
-        //Pagination filtre
-        //$post = (new \App\Models\Post())::where('id', '>', 2)->limit(1)->get();
-
-        //Modification et sauvegarde
-        //$post = (new \App\Models\Post())::find(2);
-        //$post->title = 'titre modifié';
-        //$post->save();
-
-        return \App\Models\Post::paginate(3);
-    })->name('index');
-
-        Route::get('/{slug}-{id}', function (String $slug, String $id, Request $request) {
-        $post = \App\Models\Post::findOrFail($id);
-        if($request->slug !== $post->slug) {
-            return to_route('blog.show', [$post->slug, $request->id]);
-        }
-        return $post;
-    })->where([
+        Route::get('/{slug}-{id}', [BlogController::class, "show"]
+    )->where([
         'slug' => '[a-z0-9\-]+',
         'id' => '[0-9]+',
     ])->name('show');
