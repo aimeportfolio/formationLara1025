@@ -13,19 +13,20 @@ use Illuminate\Support\Facades\Validator;
 class BlogController extends Controller
 {
 
-    public function index(BlogFilterRequest $blogFilterRequest) : View{
-        dd($blogFilterRequest->validated());
-
+    public function index() : View{
         $posts = Post::paginate(2);
         return view('blog.index',['posts' => $posts]);
     }
 
 
-    public function show(string $slug, string $id, Request $request): View | RedirectResponse {
-        $post = Post::findOrFail($id);
-        if($post->slug !== $slug) {
-            return to_route('blog.show', [$post->slug, $request->id]);
-        }
+    public function show(Post $post, Request $request): View | RedirectResponse {
+        // avec le model binding on recupere exactement ce qu'il nous faut en injectant Post aussi
+        // dans la Request on a accès aux élements ci-dessous
+        dd($request->post->created_at->format('d-m-Y'));
+
+        /*if($post->slug !== $slug) {
+            return to_route('blog.show', [$post->slug, $request->post]);
+        }*/
         return view('blog.show', ['post' => $post]);
     }
 }
