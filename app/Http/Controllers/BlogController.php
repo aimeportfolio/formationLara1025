@@ -12,21 +12,35 @@ use Illuminate\Support\Facades\Validator;
 
 class BlogController extends Controller
 {
+    public function create() : View
+    {
+        return view('blog.create');
+    }
 
-    public function index() : View{
+    public function store(Request $request) : RedirectResponse
+    {
+        $post = Post::create([
+            'title' => $request->input('title'),
+            'slug' => \Str::slug($request->input('title')),
+            'content' => $request->input('content'),
+        ]);
+        return redirect()->route('blog.show', ['slug' => $post->slug, 'post' => $post->id])->with('success', 'Post created!');
+    }
+
+    public function index(): View
+    {
         $posts = Post::paginate(2);
-        return view('blog.index',['posts' => $posts]);
+        return view('blog.index', ['posts' => $posts]);
     }
 
 
-    public function show(Post $post, Request $request): View | RedirectResponse {
-        // avec le model binding on recupere exactement ce qu'il nous faut en injectant Post aussi
-        // dans la Request on a accès aux élements ci-dessous
-        dd($request->post->created_at->format('d-m-Y'));
-
-        /*if($post->slug !== $slug) {
-            return to_route('blog.show', [$post->slug, $request->post]);
-        }*/
-        return view('blog.show', ['post' => $post]);
+    public function show(string $slug, Post $post): View|RedirectResponse
+    {
+        //dd($post);
+        //$post = Post::findOrFail($post);
+        if ($post->slug !== $slug) {
+            return to_route('blog.show', ['slug' => $post->slug, 'id' => $post->id]);
+        }
+        return view('blog.show', ['slug' => $post->slug, 'post' => $post]);
     }
 }

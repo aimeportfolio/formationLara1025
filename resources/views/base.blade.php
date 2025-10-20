@@ -32,9 +32,14 @@
             </div>
         </div>
     </nav>
+    @if(session('success'))
+    <div class="container alert alert-success">
+        {{ session('success') }}
+    </div>
+    @endif
     <div class="container">
         @yield('content')
-        @dump()
+{{--        @dump()--}}
         <div.mt-4">
             <hr>
             <p class="text-center">Mon super blog - &copy; 2024</p>
