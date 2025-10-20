@@ -39,9 +39,9 @@
     @endif
     <div class="container">
         @yield('content')
-{{--        @dump()--}}
-        <div.mt-4">
-            <hr>
+        @dump()
+        <div class="mt-4  fixed-bottom">
+            <hr style="color: orangered">
             <p class="text-center">Mon super blog - &copy; 2024</p>
         </div>
     </div>

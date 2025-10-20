@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BlogFilterRequest;
+use App\Http\Requests\FormPostRequest;
 use \Illuminate\Http\RedirectResponse;
 use App\Models\Post;
 use Illuminate\Contracts\View\View;
@@ -17,19 +18,23 @@ class BlogController extends Controller
         return view('blog.create');
     }
 
-    public function store(Request $request) : RedirectResponse
+    public function store(FormPostRequest $request) : RedirectResponse
     {
-        $post = Post::create([
+/*
+ * Avec Request $request
+ * $post = Post::create([
             'title' => $request->input('title'),
             'slug' => \Str::slug($request->input('title')),
             'content' => $request->input('content'),
-        ]);
+        ]);*/
+
+        $post = Post::create($request->validated());
         return redirect()->route('blog.show', ['slug' => $post->slug, 'post' => $post->id])->with('success', 'Post created!');
     }
 
     public function index(): View
     {
-        $posts = Post::paginate(2);
+        $posts = Post::paginate(4);
         return view('blog.index', ['posts' => $posts]);
     }
 
