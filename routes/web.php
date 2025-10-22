@@ -24,10 +24,17 @@ Route::prefix('blog')->name('blog.')->controller(BlogController::class)->group(f
     Route::get('new', 'create')->name('create');
     Route::post('new', 'store');
 
-    /*Route::get('/{slug}-{id}','show')->where([
+    Route::get('/{post}/edit', 'edit')->name('edit');
+    Route::post('/{post}/edit', 'update');
+
+    Route::delete('/{post}', 'destroy')->name('delete');
+
+    /*
+    Route::get('/{slug}-{id}','show')->where([
         'slug' => '[a-z0-9\-]+',
         'id' => '[0-9]+',
-    ])->name('show');*/
+    ])->name('show');
+    */
 
     Route::get('/{slug}-{post}','show')->where([
         'slug' => '[a-z0-9\-]+',
